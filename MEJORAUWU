@@ -1,0 +1,139 @@
+import java.util.Scanner;
+
+public class ColaCircular {
+    private int[] cola; 
+    private int capacidad; 
+    private int frente; 
+    private int finalCola; 
+    private int size; 
+
+    // Constructor para inicializar la cola
+    public ColaCircular(int N) {
+        if (N <= 0) {
+            throw new IllegalArgumentException("La capacidad debe ser mayor que cero.");
+        }
+        capacidad = N;
+        cola = new int[capacidad];
+        frente = 0;
+        finalCola = -1;
+        size = 0;
+    }
+
+    // Verificar si la cola está vacía
+    public boolean estaVacia() {
+        return size == 0;
+    }
+
+    // Verificar si la cola está llena
+    public boolean estaLlena() {
+        return size == capacidad;
+    }
+
+    // Agregar un elemento a la cola
+    public void encolar(int elemento) {
+        if (estaLlena()) {
+            System.out.println("Cola llena. No se puede agregar el elemento " + elemento);
+            return;
+        }
+        finalCola = (finalCola + 1) % capacidad;
+        cola[finalCola] = elemento;
+        size++;
+        System.out.println("Elemento encolado: " + elemento);
+    }
+
+    // Remover un elemento de la cola
+    public Integer desencolar() {
+        if (estaVacia()) {
+            System.out.println("Cola vacía. No se puede remover elementos.");
+            return null;
+        }
+        int elemento = cola[frente];
+        frente = (frente + 1) % capacidad;
+        size--;
+        return elemento;
+    }
+
+    // Ver el primer elemento sin eliminarlo
+    public Integer verFrente() {
+        return estaVacia() ? null : cola[frente];
+    }
+
+    // Obtener el tamaño actual de la cola
+    public int tamanoActual() {
+        return size;
+    }
+
+    // Mostrar el estado de la cola
+    public void mostrarCola() {
+        if (estaVacia()) {
+            System.out.println("Cola vacía.");
+            return;
+        }
+        System.out.print("Cola: ");
+        for (int i = 0; i < size; i++) {
+            System.out.print(cola[(frente + i) % capacidad] + " ");
+        }
+        System.out.println();
+    }
+
+    // Método principal para interactuar con el usuario
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N;
+
+        // Solicitar el tamaño de la cola al usuario con validación
+        while (true) {
+            System.out.print("Ingrese el tamaño de la cola (N): ");
+            N = scanner.nextInt();
+            if (N > 0) break;
+            System.out.println("El tamaño debe ser mayor que cero. Intente de nuevo.");
+        }
+
+        ColaCircular cola = new ColaCircular(N);
+        boolean continuar = true;
+
+        while (continuar) {
+            System.out.println("\nOpciones:");
+            System.out.println("1. Encolar un elemento");
+            System.out.println("2. Desencolar un elemento");
+            System.out.println("3. Mostrar la cola");
+            System.out.println("4. Ver el primer elemento");
+            System.out.println("5. Salir");
+            System.out.print("Seleccione una opción: ");
+            
+            int opcion = scanner.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    System.out.print("Ingrese el elemento a encolar: ");
+                    int elemento = scanner.nextInt();
+                    cola.encolar(elemento);
+                    break;
+                case 2:
+                    Integer desencolado = cola.desencolar();
+                    if (desencolado != null) {
+                        System.out.println("Elemento desencolado: " + desencolado);
+                    }
+                    break;
+                case 3:
+                    cola.mostrarCola();
+                    break;
+                case 4:
+                    Integer frente = cola.verFrente();
+                    if (frente != null) {
+                        System.out.println("Primer elemento en la cola: " + frente);
+                    } else {
+                        System.out.println("Cola vacía.");
+                    }
+                    break;
+                case 5:
+                    continuar = false;
+                    System.out.println("Saliendo...");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        }
+        scanner.close();
+    }
+}
